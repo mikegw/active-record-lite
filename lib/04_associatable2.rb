@@ -9,17 +9,27 @@ module Associatable
       through_options = self.class.assoc_options[through_name]
       source_options = through_options.model_class.assoc_options[source_name]
 
-      join_str = "#{through_options.table_name}.#{through_options.primary_key} = #{source_options.table_name}.id"
+      through_table = "#{through_options.table_name}"
+      source_table = "#{source_options.table_name}"
+      through_primary_key = "#{through_options.table_name}"
+
+
+
+      join_str = "#{through_table}.#{through_options.primary_key} = #{source_table}.id"
 
       results = DBConnection.execute(<<-SQL, self.owner_id)
-      SELECT #{source_options.table_name}.*
-      FROM #{through_options.table_name}
-      JOIN #{source_options.table_name}
-      ON #{join_str}
-      WHERE #{through_options.table_name}.id = ?
+      SELECT
+        #{source_table}.*
+      FROM
+       #{through_table}
+      JOIN
+        #{source_table}
+      ON
+        #{join_str}
+      WHERE
+        #{through_table}.id = ?
 
       SQL
-      p ["HELLO", results]
       source_options.model_class.parse_all(results).first
     end
 
