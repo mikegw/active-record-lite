@@ -17,7 +17,7 @@ module Associatable
 
       join_str = "#{through_table}.#{through_options.primary_key} = #{source_table}.id"
 
-      results = DBConnection.execute(<<-SQL, self.owner_id)
+      results = DBConnection.execute(<<-SQL, self.send(through_options.foreign_key))
       SELECT
         #{source_table}.*
       FROM

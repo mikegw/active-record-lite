@@ -38,4 +38,12 @@ describe 'Searchable' do
     expect(human.fname).to eq('Matt')
     expect(human.house_id).to eq(1)
   end
+
+  it 'chains wheres together' do
+    humans = Human.where(house_id: 1).where(fname: 'Matt')
+    expect(humans.length).to eq(1)
+
+    human = humans[0]
+    expect(human.id).to eq(2)
+  end
 end
